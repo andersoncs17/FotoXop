@@ -39,11 +39,27 @@ Pilha *criaPilha() {
  * @param pilha Ponteiro para a pilha a ser liberada
  */
 void liberaPilha(Pilha *pilha) {
-    AVISO(Pilha.c : Ainda não implementei a função 'liberaPilha');
+    if (pilha == NULL) return;
 
-    // Com você :)
+    // Percorrer todos os nós e liberar
+    No *atual = pilha->inicio;
+    while (atual != NULL) {
+        No *proximo = atual->proximo;
 
+        // Liberar a imagem armazenada no nó
+        if (atual->imagem != NULL) {
+            liberaImagem(atual->imagem);
+        }
 
+        // Liberar o nó
+        free(atual);
+
+        // Avançar para o próximo
+        atual = proximo;
+    }
+
+    // Liberar a estrutura da pilha
+    free(pilha);
 }
 
 /**

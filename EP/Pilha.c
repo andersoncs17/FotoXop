@@ -39,7 +39,8 @@ Pilha *criaPilha() {
  * @param pilha Ponteiro para a pilha a ser liberada
  */
 void liberaPilha(Pilha *pilha) {
-    if (pilha == NULL) return;
+    if (pilha == NULL) 
+        return;
 
     // Percorrer todos os nós e liberar
     No *atual = pilha->inicio;
@@ -70,7 +71,8 @@ void liberaPilha(Pilha *pilha) {
  */
 void pushPilha(Pilha *pilha, Imagem *img) {
     /* ATENÇÃO: passe sempre uma CÓPIA da imagem */
-    if (pilha == NULL) return;
+    if (pilha == NULL) 
+        return;
 
     No *novo = malloc(sizeof(No));
     novo->imagem = img;
@@ -86,11 +88,14 @@ void pushPilha(Pilha *pilha, Imagem *img) {
  */
 void popPilha(Pilha *pilha) {
     /* ATENÇÃO: não se esqueça de liberar a imagem alocada */
-    AVISO(Pilha.c : Ainda não implementei a função 'popPilha');
+    if (pilha == NULL || pilha->inicio == NULL) 
+        return;
 
-    // Com você :)
-
-    
+    No *temp = pilha->inicio;
+    pilha->inicio = temp->proximo;
+    liberaImagem(temp->imagem);
+    free(temp);
+    pilha->n--;
 }
 
 /**
@@ -100,12 +105,10 @@ void popPilha(Pilha *pilha) {
  * @return Imagem* Ponteiro para a imagem do topo da pilha
  */
 Imagem *topPilha(Pilha *pilha){
-    AVISO(Pilha.c : Ainda não implementei a função 'topPilha'); 
-    
-    // Com você :)
+    if (pilha == NULL || pilha->inicio == NULL) 
+        return NULL;
 
-    return NULL;
-    
+    return pilha->inicio->imagem;
 }
 
 /**

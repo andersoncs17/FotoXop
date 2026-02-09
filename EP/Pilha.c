@@ -70,11 +70,13 @@ void liberaPilha(Pilha *pilha) {
  */
 void pushPilha(Pilha *pilha, Imagem *img) {
     /* ATENÇÃO: passe sempre uma CÓPIA da imagem */
-    AVISO(Pilha.c : Ainda não implementei a função 'pushPilha');
+    if (pilha == NULL) return;
 
-    // Com você :)
-
-    
+    No *novo = malloc(sizeof(No));
+    novo->imagem = img;
+    novo->proximo = pilha->inicio;
+    pilha->inicio = novo;
+    pilha->n++;
 }
 
 /**

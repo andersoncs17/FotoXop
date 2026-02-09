@@ -22,11 +22,17 @@ Lista *criaLista() {
  * @param lista Ponteiro para a lista a ser liberada
  */
 void liberaLista(Lista* lista) {
-    AVISO(Lista.c : Ainda não implementei a função 'liberaLista'); // Retire esssa mensagem ao implementar a fução
+    if (lista == NULL) 
+        return;
 
-    // Com você :)
+    No *atual = lista->inicio;
+    while (atual != NULL) {
+        No *proximo = atual->proximo;
+        free(atual);
+        atual = proximo;
+    }
 
-    
+    free(lista);
 }
 
 /**
@@ -36,11 +42,22 @@ void liberaLista(Lista* lista) {
  * @param pos Posição a ser inserida
  */
 void insereLista(Lista *lista, Posicao pos) {
-    AVISO(Lista.c : Ainda não implementei a função 'insereLista'); // Retire esssa mensagem ao implementar a fução
+    if (lista == NULL) 
+        return;
 
-    // Com você :)
+    No *novo = malloc(sizeof(No));
+    novo->pos = pos;
+    novo->proximo = NULL;
 
-    
+    if (lista->inicio == NULL) {
+        lista->inicio = novo;
+        lista->fim = novo;
+    } else {
+        lista->fim->proximo = novo;
+        lista->fim = novo;
+    }
+
+    lista->tamanho++;
 }
 
 /**
@@ -50,11 +67,14 @@ void insereLista(Lista *lista, Posicao pos) {
  * @param origem Lista de origem
  */
 void appendLista(Lista *destino, const Lista *origem){
-    AVISO(Lista.c : Ainda não implementei a função 'appendLista'); // Retire esssa mensagem ao implementar a fução
+    if (destino == NULL || origem == NULL) 
+        return;
 
-    //Com você :)
-
-    
+    No *atual = origem->inicio;
+    while (atual != NULL) {
+        insereLista(destino, atual->pos);
+        atual = atual->proximo;
+    }
 }
 
 /**

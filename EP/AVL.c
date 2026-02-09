@@ -32,6 +32,7 @@ struct arvore {
  * @param p Posição do pixel na imagem
  * @return NoBST* Ponteiro para o novo nó criado
  */
+
 NoBST *criaNo(Cor cor, Posicao p) {
     NoBST *no = mallocSafe(sizeof(NoBST));
     no->pixel = cor;
@@ -54,22 +55,36 @@ Arvore *criaArvore(Imagem *img) {
         ERRO("Imagem inválida para criação da árvore.");
         return NULL;
     }
-    AVISO(AVL.c : Ainda não implementei a função 'criaArvore'); // Retire esssa mensagem ao implementar a fução
+
     Arvore *arvore = mallocSafe(sizeof(Arvore));
+    arvore->raiz = NULL;
+    arvore->numeroNos = 0;
     
+    for (int i = 0; i < obtemAltura(img); i++) {
+        for (int j = 0; j < obtemLargura(img); j++) {
+            Cor cor = obtemCorPixel(img, i, j);
+            Posicao p = {i, j};
+            insereArvore(arvore, cor, p);
+        }
+    }
     return arvore;
 }
-
-
 
 /**
  * @brief Libera os nós da árvore recursivamente
  * 
  * @param raiz Ponteiro para o nó raiz
  */
+
 void liberaNosArvore(NoBST *raiz){
-    AVISO(AVL.c : Ainda não implementei a função 'liberaNosArvore'); // Retire esssa mensagem ao implementar a fução
-    
+    if (raiz == NULL)  
+        return;
+
+    liberaNosArvore(raiz->esq);
+    liberaNosArvore(raiz->dir);
+
+    liberaLista(raiz->ocorrencias);
+    free(raiz);
 }
 
 /**
@@ -170,11 +185,43 @@ NoBST *insereNo(NoBST *raiz, Cor cor, Posicao p, bool *novoNoInserido) {
     // Além disso, após a inserção, você deve atualizar as alturas e
     // verificar se é necessário fazer rotações para manter a árvore balanceada.
 
-    AVISO(AVL.c : Ainda não implementei a função 'insereNo'); // Retire esssa mensagem ao implementar a fução
+    int compara = comparaCores(cor, raiz->pixel);
 
-    // Com você :)
+    if (compara == 0) {
+        insereLista(raiz->ocorrencias, p);
+        return raiz;
+    } else if (compara < 0) {
+        raiz->esq = insereNo(raiz->esq, cor, p, novoNoInserido);
+    } else {
+        raiz->dir = insereNo(raiz->dir, cor, p, novoNoInserido);
+    }
 
-    
+    //Atualizar altura
+    raiz->altura = max(altura(raiz->esq), altura(raiz->dir)) + 1;
+
+    //Verificar balanceamento e fazer rotações
+    int fat_balanceamento = fatorBalanceamento(raiz);
+
+    //Esquerda-esquerda
+    if (fat_balanceamento > 1 && comparaCores(cor, raiz->esq->pixel) < 0)
+        return rotacaoDireita(raiz);
+
+    //Direita-direita
+    if (fat_balanceamento < -1 && comparaCores(cor, raiz->dir->pixel) > 0)
+        return rotacaoEsquerda(raiz);
+
+    //Esquerda-direita
+    if (fat_balanceamento > 1 && comparaCores(cor, raiz->esq->pixel) > 0) {
+        raiz->esq = rotacaoEsquerda(raiz->esq);
+        return rotacaoDireita(raiz);
+    }
+
+    //Direita-esquerda
+    if (fat_balanceamento < -1 && comparaCores(cor, raiz->dir->pixel) < 0) {
+        raiz->dir = rotacaoDireita(raiz->dir);
+        return rotacaoEsquerda(raiz);
+    }
+
     return raiz;
 }
 
@@ -207,9 +254,18 @@ Lista* buscaCorExata (NoBST* raiz, Cor cor) {
 
     // Use a função comparaCores (Cor.c) para comparar as cores.
 
-    AVISO(AVL.c : Ainda não implementei a função 'buscaCorExata'); // Retire esssa mensagem ao implementar a fução
-    // Com você :)
-    return NULL;
+    if (raiz == NULL) 
+        return NULL;
+
+    int compara = comparaCores(cor, raiz->pixel);
+
+    if (compara == 0) {
+        return raiz->ocorrencias;
+    } else if (compara < 0) {
+        return buscaCorExata(raiz->esq, cor);
+    } else {
+        return buscaCorExata(raiz->dir, cor);
+    }
 }
 
 /**
@@ -226,9 +282,17 @@ void buscaCorAproximada(NoBST* raiz, Cor cor, int tolerancia, Lista **resultado)
     // Se estiver, você deve adicionar todas as posições
     // da lista de ocorrências do nó à lista de resultado (use a função appendLista).
 
-    AVISO(AVL.c : Ainda não implementei a função 'buscaCorAproximada'); // Retire esssa mensagem ao implementar a fução
-    // Com você :)
-    
+    if (raiz == NULL) 
+        return;
+
+    //Verifica se o nó atual serve
+    if (distanciaCores(raiz->pixel, cor) <= tolerancia) {
+        appendLista(*resultado, raiz->ocorrencias);
+    }
+
+    //Continua procurando em toda a árvore
+    buscaCorAproximada(raiz->esq, cor, tolerancia, resultado);
+    buscaCorAproximada(raiz->dir, cor, tolerancia, resultado);
 }
 
 /**
@@ -241,20 +305,24 @@ void buscaCorAproximada(NoBST* raiz, Cor cor, int tolerancia, Lista **resultado)
  * @param tolerancia Tolerância para a busca
  * @return Lista* Lista de posições onde a cor foi encontrada ou NULL se não encontrada
  */
+
 Lista *buscaArvore(Arvore *arvore, Cor cor, int tolerancia) {
     // Nesta função você deve verificar se a árvore é válida.
     // Se for, deve chamar a função de busca apropriada dependendo
     // do valor da tolerância.
+
     if (arvoreVazia(arvore)) {
-        ERRO("Árvore inválida para busca.");
+        ERRO("Arvore invalida para busca.");
         return NULL;
     }
 
-    AVISO(AVL.c : Ainda não implementei a função 'buscaArvore'); // Retire esssa mensagem ao implementar a fução
-
-    // Com você :)
-
-    return NULL;
+    if (tolerancia == 0) {
+        return buscaCorExata(arvore->raiz, cor);
+    } else {
+        Lista *resultado = criaLista();
+        buscaCorAproximada(arvore->raiz, cor, tolerancia, &resultado);
+        return resultado;
+    }
 }
 
 /**

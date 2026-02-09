@@ -276,13 +276,15 @@ void sairCallback(GtkWidget *widget, gpointer data) {
 
 void desfazerCallback(GtkWidget *widget, gpointer data) {
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'desfazerCallback'");
     if (pilhaDesfazer && !pilhaVazia(pilhaDesfazer)) {
-        // Com você :)
-        
+        Imagem *img = topPilha(pilhaDesfazer);
+        Imagem *copia = copiaImagem(img);
+        popPilha(pilhaDesfazer);
+        liberaImagem(imagemAtual);
+        imagemAtual = copia;
         atualizaDisplay();
     }
-    
+
 #endif
 }
 
@@ -290,9 +292,7 @@ void filtroEscalaCinzaCallback(GtkWidget *widget, gpointer data) {
     if (!imagemAtual)
         return;
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'filtroEscalaCinzaCallback'");
-    // Com você :)
-
+    pushPilha(pilhaDesfazer, copiaImagem(imagemAtual));
 #endif
     escalaDeCinzaImagem(imagemAtual);
     atualizaDisplay();
@@ -301,9 +301,9 @@ void filtroEscalaCinzaCallback(GtkWidget *widget, gpointer data) {
 void deteccaoBordasLaplaceCallback(GtkWidget *widget, gpointer data){
     if (!imagemAtual)
         return;
+
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'deteccaoBordasLaplaceCallback'");
-    // Com você :)
+    pushPilha(pilhaDesfazer, copiaImagem(imagemAtual));
 
 #endif
     deteccaoBordasLaplace(imagemAtual);
@@ -314,8 +314,7 @@ void filtroSobelCallback(GtkWidget *widget, gpointer data){
     if (!imagemAtual)
         return;
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'filtroSobelCallback'");
-    // Com você :)
+    pushPilha(pilhaDesfazer, copiaImagem(imagemAtual));
 
 #endif
     filtroSobel(imagemAtual);
@@ -326,8 +325,7 @@ void meuFiltroCallback(GtkWidget *widget, gpointer data){
     if (!imagemAtual)
         return;
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'meuFiltroCallback'");
-    // Com você :)
+    pushPilha(pilhaDesfazer, copiaImagem(imagemAtual));
 
 #endif
     meuFiltro(imagemAtual);
@@ -338,8 +336,7 @@ void imagemOriginalCallback(GtkWidget *widget, gpointer data) {
     if (!imagemOriginal)
         return;
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'imagemOriginalCallback'");
-    // Com você :)
+    pushPilha(pilhaDesfazer, copiaImagem(imagemAtual));
 
 #endif
     // Libera a imagem atual antes de copiar
@@ -387,8 +384,7 @@ void aplicarAlteracoes() {
     if(!imagemPreVisualizacao)
         return;
 #if ETAPA >= 3
-    AVISO("UI.c: Não inclui uma cópia da imagem atual na pilha de desfazer na função 'aplicarAlteracoes'");
-    // Com você :)
+    pushPilha(pilhaDesfazer, copiaImagem(imagemAtual));
 
 #endif
     liberaImagem(imagemAtual);
@@ -539,11 +535,21 @@ void previewTrocaCor(GtkSpinButton *sb, gpointer data) {
     int bn = corNova.blue * 255;
 
 #if ETAPA >= 6
-    AVISO("UI.c: Ainda não gerei a lista de posições que devem ser alteradas na função 'previewTrocaCor'");
-    // Lembre-se que se a tolerância for zero, você não deve liberar a lista, pois ela é interna à árvore.
-    // Caso contário, se a tolerância for maior que zero, você deve liberar a lista ao final.
+    Cor corAlvo = {r0, g0, b0};
+    Lista *lista = buscaArvore(arvoreCores, corAlvo, tolerancia);
 
-    // Com você :)
+    if (lista != NULL) {
+        No *atual = lista->inicio;
+        while (atual != NULL) {
+            Cor novaCor = {rn, gn, bn};
+            recolorePixel(imagemPreVisualizacao, atual->pos.linha, atual->pos.coluna, novaCor);
+            atual = atual->proximo;
+        }
+
+        if (tolerancia > 0) {
+            liberaLista(lista);
+        }
+    }
     
 #endif
     if (pixbufPreVisualizacao)

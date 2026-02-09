@@ -9,7 +9,7 @@
  * @brief Etapa atual do EP
  * 
  */
-#define ETAPA 5
+#define ETAPA 6
 
 #define ERRO(msg) fprintf(stderr, "\033[31mERRO:\033[0m %s\n", #msg)
 #define AVISO(msg) fprintf(stdout, "AVISO: %s\n", #msg)

@@ -535,8 +535,8 @@ void previewTrocaCor(GtkSpinButton *sb, gpointer data) {
     int bn = corNova.blue * 255;
 
 #if ETAPA >= 6
-    Cor corAlvo = {r0, g0, b0};
-    Lista *lista = buscaArvore(arvoreCores, corAlvo, tolerancia);
+    Cor alvo = {r0, g0, b0};
+    Lista *lista = buscaArvore(arvoreCores, alvo, tolerancia);
 
     if (lista != NULL) {
         No *atual = lista->inicio;
@@ -565,6 +565,7 @@ void abrirJanelaTrocaCor(GtkWidget *w, gpointer d) {
     gtk_window_set_modal(GTK_WINDOW(janelaTrocaCor), TRUE);
 
     g_signal_connect(janelaTrocaCor, "destroy", G_CALLBACK(botaoCancelarTrocaCorClicked), &janelaBrilhoContraste);
+    g_signal_connect(janelaTrocaCor, "destroy", G_CALLBACK(botaoCancelarTrocaCorClicked), NULL);
 
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     gtk_container_set_border_width(GTK_CONTAINER(vbox), 10);

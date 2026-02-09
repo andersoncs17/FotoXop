@@ -42,24 +42,24 @@ void liberaPilha(Pilha *pilha) {
     if (pilha == NULL) 
         return;
 
-    // Percorrer todos os nós e liberar
+    //Percorre todos os nós e libera
     No *atual = pilha->inicio;
     while (atual != NULL) {
         No *proximo = atual->proximo;
 
-        // Liberar a imagem armazenada no nó
+        //Libera a imagem armazenada no nó
         if (atual->imagem != NULL) {
             liberaImagem(atual->imagem);
         }
 
-        // Liberar o nó
+        //Libera o nó
         free(atual);
 
-        // Avançar para o próximo
+        //Avança para o próximo
         atual = proximo;
     }
 
-    // Liberar a estrutura da pilha
+    //Libera a estrutura da pilha
     free(pilha);
 }
 

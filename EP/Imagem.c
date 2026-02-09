@@ -23,15 +23,13 @@ struct imagem {
  */
 
 Imagem *alocaImagem(int largura, int altura){
-    //AVISO(Imagem.c : Ainda não implementei a função 'alocaImagem'); // Retire esssa mensagem ao implementar a fução
-
     if (largura <= 0 || altura <= 0) {
         return NULL;
     }
 
     Imagem *img = (Imagem*) malloc(sizeof(Imagem));
     if (img == NULL) {
-        return NULL; // Falha na alocação
+        return NULL; //Falha na alocação
     }
     
     img->largura = largura;
@@ -41,7 +39,7 @@ Imagem *alocaImagem(int largura, int altura){
     //Alocando colunas 
     img->pixel = (Cor**) calloc(altura, sizeof(Cor*));
     if (img->pixel == NULL) {
-        free(img); // Limpa o que já foi alocado
+        free(img); 
         return NULL;
     }
 
@@ -68,22 +66,17 @@ Imagem *alocaImagem(int largura, int altura){
  * @param img Ponteiro para a imagem a ser liberada.
  */
 void liberaImagem(Imagem *img){
-    //AVISO(Imagem.c: Ainda não implementei a função 'liberaImagem'); //Retire esssa mensagem ao implementar a fução
     if (img == NULL) return;
 
-    //Libera a matriz de pixels, se ela existir
     if (img->pixel != NULL) {
-        // Libera cada linha individualmente
         for (int i = 0; i < img->altura; i++) {
             if (img->pixel[i] != NULL) {
                 free(img->pixel[i]);
             }
         }
-        // Libera o vetor de ponteiros de linhas
         free(img->pixel);
     }
 
-    //Libera a estrutura principal
     free(img);
 }
 
@@ -136,8 +129,6 @@ Cor obtemCorPixel(Imagem *img, int l, int c){
  * @return Imagem* Ponteiro para a imagem copiada
  */
 Imagem* copiaImagem(Imagem *origem){
-    //AVISO(Imagem.c: Ainda não implementei a função 'copiaImagem'); //Retire esssa mensagem ao implementar a fução
-    // Lembre-se de verificar se a imagem de origem foi alocada (origem diferente de NULL).
 
     if (origem == NULL) 
         return NULL;

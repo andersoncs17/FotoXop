@@ -74,7 +74,7 @@ void atualizaDisplay() {
     pixbufAtual = imagemParaPixbuf(imagemAtual);
 
 #if ETAPA >= 6
-    // Atualiza a árvore de cores
+    //Atualiza a árvore de cores
     liberaArvore(arvoreCores);
     arvoreCores = criaArvore(imagemAtual);
 #endif    
@@ -124,7 +124,7 @@ void abrirImagemCallback(GtkWidget *widget, gpointer data) {
     gtk_file_filter_add_pattern(filter, "*.PNM");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
 
-    // Adicionar filtro "Todos os arquivos"
+    //Adicionar filtro "Todos os arquivos"
     GtkFileFilter *filterTodos = gtk_file_filter_new();
     gtk_file_filter_set_name(filterTodos, "Todos os arquivos");
     gtk_file_filter_add_pattern(filterTodos, "*");
@@ -135,7 +135,7 @@ void abrirImagemCallback(GtkWidget *widget, gpointer data) {
 
         g_print("\n=== Carregando arquivo: %s ===\n", filename);
 
-        // Liberar imagem anterior
+        // Libera imagem anterior
         if (imagemAtual) {
             liberaImagem(imagemAtual);
             imagemAtual = NULL;
@@ -655,26 +655,26 @@ bool onClick(GtkWidget *w, GdkEventButton *e, gpointer d) {
         if (!pixbufAtual)
             return true;
 
-        // 1. Obtém as dimensões do Widget (Janela/Área visível)
+        //Obtém as dimensões do Widget 
         int widgetW = gtk_widget_get_allocated_width(w);
         int widgetH = gtk_widget_get_allocated_height(w);
 
-        // 2. Obtém as dimensões reais da Imagem
+        //Obtém as dimensões reais da Imagem
         int imgW = gdk_pixbuf_get_width(pixbufAtual);
         int imgH = gdk_pixbuf_get_height(pixbufAtual);
 
-        // 3. Calcula o offset (centralização)
+        //Calcula o offset (centralização)
         // Se o widget for maior que a imagem, a imagem está centralizada.
         // O offset é a metade da sobra.
         int offsetX = (widgetW > imgW) ? (widgetW - imgW) / 2 : 0;
         int offsetY = (widgetH > imgH) ? (widgetH - imgH) / 2 : 0;
 
-        // 4. Calcula a posição real no pixel
+        //Calcula a posição real no pixel
         int tempX = (int)e->x - offsetX;
         int tempY = (int)e->y - offsetY;
 
-        // 5. Verifica se o clique foi DENTRO da imagem
-        // Se clicar na borda cinza, ignoramos.
+        //Verifica se o clique foi DENTRO da imagem
+        //Se clicar na borda cinza, ignoramos.
         if (tempX < 0 || tempY < 0 || tempX >= imgW || tempY >= imgH) {
             g_print("Clique fora da área da imagem.\n");
             return false;
